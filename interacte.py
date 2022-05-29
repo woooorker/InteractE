@@ -36,7 +36,7 @@ class Main(object):
 		self.load_data()
 		self.model        = self.add_model()
 		self.optimizer    = self.add_optimizer(self.model.parameters())
-
+	#数据载入
 	def load_data(self):
 		"""
 		Reading in raw triples and converts it into a standard format. 
@@ -60,7 +60,7 @@ class Main(object):
 		self.chequer_perm:      Stores the Chequer reshaping arrangement
 
 		"""
-
+		#创建两个orderedset集合
 		ent_set, rel_set = OrderedSet(), OrderedSet()
 		for split in ['train', 'test', 'valid']:
 			for line in open('./data/{}/{}.txt'.format(self.p.dataset, split)):
@@ -83,7 +83,7 @@ class Main(object):
 
 		self.data	= ddict(list)
 		sr2o		= ddict(set)
-
+		#分成triple
 		for split in ['train', 'test', 'valid']:
 			for line in open('./data/{}/{}.txt'.format(self.p.dataset, split)):
 				sub, rel, obj = map(str.lower, line.strip().split('\t'))
@@ -96,6 +96,7 @@ class Main(object):
 		self.data = dict(self.data)
 
 		self.sr2o = {k: list(v) for k, v in sr2o.items()}
+		#准备测试集的不完整triple
 		for split in ['test', 'valid']:
 			for sub, rel, obj in self.data[split]:
 				sr2o[(sub, rel)].add(obj)
@@ -351,7 +352,7 @@ class Main(object):
 
 		return results
 
-
+	#具体的训练过程
 	def run_epoch(self, epoch):
 		"""
 		Function to run one epoch of training
